@@ -141,10 +141,14 @@ coalesce <- function(...) {
 #'   \item{\dQuote{s}, \dQuote{secs}, \dQuote{seconds}}{}
 #'   \item{\dQuote{t}, \dQuote{time}}{Appropriately prefixed time unit.}
 #'   \item{\dQuote{eps}}{Evaluations per second / Hertz.}
-#'   \item{\dQuote{hz}}{Hertz / evaluations per second.}
-#'   \item{\dQuote{khz}}{Kilohertz / 1000s of evaluations per second.}
-#'   \item{\dQuote{mhz}}{Megahertz / 1000000s of evaluations per second.}
-#'   \item{\dQuote{f}, \dQuote{frequency}}{Appropriately prefixed frequency unit.}
+#'   \item{\dQuote{hz}, \dQuote{hertz}}{Hertz / evaluations per
+#'   second.}
+#'   \item{\dQuote{khz}, \dQuote{kilohertz}}{Kilohertz / 1000s of evaluations
+#'   per second.}
+#'   \item{\dQuote{mhz}, \dQuote{megahertz}}{Megahertz / 1000000s of evaluations
+#'   per second.}
+#'   \item{\dQuote{f}, \dQuote{frequency}}{Appropriately prefixed frequency
+#'   unit.}
 #' }
 #'
 #' @param unit A unit of time. See details.
@@ -164,7 +168,9 @@ normalize_unit <- function(unit)
               "seconds", "s", "secs",
               "time", "t",
               "frequency", "f",
-              "hz", "khz", "mhz",
+              "hertz", "hz",
+              "kilohertz", "khz",
+              "megahertz", "mhz",
               "eps", "relative")
 
   if (is.null(unit)) {
@@ -189,8 +195,11 @@ normalize_unit <- function(unit)
            t = "t",
            frequency = ,
            f = "f",
+           hertz = ,
            hz = "hz",
+           kilohertz = ,
            khz = "khz",
+           megahertz = ,
            mhz = "mhz",
            eps = "eps",
            relative = "relative")
