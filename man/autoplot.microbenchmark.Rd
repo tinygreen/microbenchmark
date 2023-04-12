@@ -5,22 +5,23 @@
 \title{Autoplot method for microbenchmark objects: Prettier graphs for
 microbenchmark using ggplot2}
 \usage{
-autoplot.microbenchmark(
-  object,
-  ...,
-  log = TRUE,
-  y_max = 1.05 * max(object$time)
-)
+autoplot.microbenchmark(object, unit, ..., log = TRUE, y_max = NULL)
 }
 \arguments{
 \item{object}{A microbenchmark object}
+
+\item{unit}{What unit to use on the time axis. Defaults to the \code{unit}
+attribute of \code{object}, or the option \code{microbenchmark.unit} if the
+attribute is not set. If neither is set, \dQuote{t} is used.}
 
 \item{\dots}{Ignored}
 
 \item{log}{If \code{TRUE} the time axis will be on log scale.}
 
-\item{y_max}{The upper limit of the y axis (defaults to 5 percent more than
-the maximum value)}
+\item{y_max}{The maximum time to plot in \code{unit}s (nanoseconds if the
+unit is not given, or is \dQuote{t} or \dQuote{f}). Note that if
+\code{unit} is a frequency, the maximum time corresponds to the minimum
+frequency on the axis.}
 }
 \value{
 A ggplot2 plot
@@ -40,5 +41,5 @@ ggplot2::autoplot(tm)
 }
 }
 \author{
-Ari Friedman, Olaf Mersmann
+Ari Friedman, Olaf Mersmann, Thomas Nygreen
 }

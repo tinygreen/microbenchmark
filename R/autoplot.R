@@ -4,10 +4,15 @@
 #' Uses ggplot2 to produce a more legible graph of microbenchmark timings
 #'
 #' @param object A microbenchmark object
+#' @param unit What unit to use on the time axis. Defaults to the \code{unit}
+#'   attribute of \code{object}, or the option \code{microbenchmark.unit} if the
+#'   attribute is not set. If neither is set, \dQuote{t} is used.
 #' @param \dots Ignored
 #' @param log If \code{TRUE} the time axis will be on log scale.
-#' @param y_max The upper limit of the y axis, in the unit automatically
-#'   chosen for the time axis (defaults to the maximum value)
+#' @param y_max The maximum time to plot in \code{unit}s (nanoseconds if the
+#'   unit is not given, or is \dQuote{t} or \dQuote{f}). Note that if
+#'   \code{unit} is a frequency, the maximum time corresponds to the minimum
+#'   frequency on the axis.
 #' @return A ggplot2 plot
 #'
 #' @examples
@@ -20,23 +25,43 @@
 #'                      rchisq(100, 5), times=1000L)
 #' ggplot2::autoplot(tm)
 #' }
-#' @author Ari Friedman, Olaf Mersmann
-autoplot.microbenchmark <- function(object, ...,
+#' @author Ari Friedman, Olaf Mersmann, Thomas Nygreen
+autoplot.microbenchmark <- function(object, unit,...,
                                     log=TRUE,
                                     y_max=NULL) {
   if (!requireNamespace("ggplot2"))
     stop("Missing package 'ggplot2'.")
+  
+  if (missing(unit)) {
+    unit <- attr(object, "unit")
+  }
+
+  if (is.null(unit)) {
+    unit <- getOption("microbenchmark.unit", "t")
+  } else {
+    unit <- normalize_unit(unit)
+  }
+  
+  object$ntime <- convert_to_unit(object$time, unit)
+  
   y_min <- 0
-  object$ntime <- convert_to_unit(object$time, "t")
   if (is.null(y_max)) {
     y_max <- max(object$ntime)
+  } else if (unit == "t") {
+    nunit <- normalize_unit(attr(object$ntime, "unit"))
+    y_max <- convert_to_unit(y_max, nunit)
+  } else if (unit == "f") {
+    nunit <- normalize_unit(attr(object$ntime, "unit"))
+    y_min <- convert_to_unit(y_max, nunit)
+    y_max <- max(object$ntime)
   }
+  
   plt <- ggplot2::ggplot(object, ggplot2::aes_string(x="expr", y="ntime"))
   plt <- plt + ggplot2::stat_ydensity()
   plt <- plt + ggplot2::scale_x_discrete(name="")
   y_label <- sprintf("Time [%s]", attr(object$ntime, "unit"))
   if (log) {
-    y_min <- min(object$ntime)
+    y_min <- max(y_min, min(object$ntime))
     plt <- plt + ggplot2::scale_y_log10(name=y_label)
   } else {
     plt <- plt + ggplot2::scale_y_continuous(name=y_label)
