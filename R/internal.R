@@ -140,7 +140,7 @@ coalesce <- function(...) {
 #'   \item{\dQuote{ms}, \dQuote{milliseconds}}{}
 #'   \item{\dQuote{s}, \dQuote{secs}, \dQuote{seconds}}{}
 #'   \item{\dQuote{t}, \dQuote{time}}{Appropriately prefixed time unit.}
-#'   \item{\dQuote{eps}}{Evaluations per second / Hertz.}
+#'   \item{\dQuote{eps}, \dQuote{evaluations per second}}{The same as Hertz.}
 #'   \item{\dQuote{hz}, \dQuote{hertz}}{Hertz / evaluations per
 #'   second.}
 #'   \item{\dQuote{khz}, \dQuote{kilohertz}}{Kilohertz / 1000s of evaluations
