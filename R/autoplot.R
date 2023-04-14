@@ -10,9 +10,9 @@
 #' @param \dots Passed to \code{ggplot2::geom_violin}
 #' @param log If \code{TRUE} the time axis will be on log scale.
 #' @param y_max The maximum time to plot in \code{unit}s (nanoseconds if the
-#'   unit is not given, or is \dQuote{t} or \dQuote{f}). Note that if
-#'   \code{unit} is a frequency, the maximum time corresponds to the minimum
-#'   frequency on the axis.
+#'   unit is \dQuote{t} (default) or \dQuote{f}. Note that if \code{unit} is a
+#'   frequency, \code{y_max} is used as the \emph{minimum} frequency on the
+#'   axis.
 #' @return A ggplot2 plot
 #'
 #' @examples
@@ -54,6 +54,11 @@ autoplot.microbenchmark <- function(object, unit,...,
     nunit <- normalize_unit(attr(object$ntime, "unit"))
     y_min <- convert_to_unit(y_max, nunit)
     y_max <- max(object$ntime)
+  } else if (unit %in% c("hz", "khz", "mhz", "eps")) {
+    y_min <- y_max
+    y_max <- max(object$ntime)
+  } else if (unit == "relative") {
+    stop('Plotting with unit="relative" not implemented yet')
   }
   
   plt <- ggplot2::ggplot(object, ggplot2::aes(x = .data$ntime, y = .data$expr))
