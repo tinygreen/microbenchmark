@@ -7,7 +7,7 @@
 #' @param unit What unit to use on the time axis. Defaults to the \code{unit}
 #'   attribute of \code{object}, or the option \code{microbenchmark.unit} if the
 #'   attribute is not set. If neither is set, \dQuote{t} is used.
-#' @param \dots Ignored
+#' @param \dots Passed to \code{ggplot2::geom_violin}
 #' @param log If \code{TRUE} the time axis will be on log scale.
 #' @param y_max The maximum time to plot in \code{unit}s (nanoseconds if the
 #'   unit is not given, or is \dQuote{t} or \dQuote{f}). Note that if
@@ -56,16 +56,16 @@ autoplot.microbenchmark <- function(object, unit,...,
     y_max <- max(object$ntime)
   }
   
-  plt <- ggplot2::ggplot(object, ggplot2::aes_string(x="expr", y="ntime"))
-  plt <- plt + ggplot2::stat_ydensity()
-  plt <- plt + ggplot2::scale_x_discrete(name="")
+  plt <- ggplot2::ggplot(object, ggplot2::aes(x = .data$ntime, y = .data$expr))
+  plt <- plt + ggplot2::geom_violin(...)
+  plt <- plt + ggplot2::scale_y_discrete(name="")
   y_label <- sprintf("Time [%s]", attr(object$ntime, "unit"))
   if (log) {
     y_min <- max(y_min, min(object$ntime))
-    plt <- plt + ggplot2::scale_y_log10(name=y_label)
+    plt <- plt + ggplot2::scale_x_log10(name=y_label)
   } else {
-    plt <- plt + ggplot2::scale_y_continuous(name=y_label)
+    plt <- plt + ggplot2::scale_x_continuous(name=y_label)
   }
-  plt <- plt + ggplot2::coord_flip(ylim=c(y_min , y_max))
+  plt <- plt + ggplot2::coord_cartesian(xlim=c(y_min, y_max))
   plt
 }

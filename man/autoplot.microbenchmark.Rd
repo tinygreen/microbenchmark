@@ -14,7 +14,7 @@ autoplot.microbenchmark(object, unit, ..., log = TRUE, y_max = NULL)
 attribute of \code{object}, or the option \code{microbenchmark.unit} if the
 attribute is not set. If neither is set, \dQuote{t} is used.}
 
-\item{\dots}{Ignored}
+\item{\dots}{Passed to \code{ggplot2::geom_violin}}
 
 \item{log}{If \code{TRUE} the time axis will be on log scale.}
 
