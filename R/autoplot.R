@@ -66,7 +66,7 @@ autoplot.microbenchmark <- function(object, unit,...,
   plt <- plt + ggplot2::scale_y_discrete(name="")
   y_label <- sprintf("Time [%s]", attr(object$ntime, "unit"))
   if (log) {
-    y_min <- max(y_min, min(object$ntime))
+    y_min <- max(y_min, min(object$ntime[object$ntime > 0]))
     plt <- plt + ggplot2::scale_x_log10(name=y_label)
   } else {
     plt <- plt + ggplot2::scale_x_continuous(name=y_label)
